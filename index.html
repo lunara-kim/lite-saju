@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>간단 만세력 (Saju Calculator)</title>
+    <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: #1d1d1f;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        input[type="datetime-local"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0077ed;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pillar-header {
+            font-size: 0.9rem;
+            color: #86868b;
+            margin-bottom: 5px;
+        }
+
+        .pillar-card {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 15px 5px;
+            border-radius: 8px;
+            background: #fafafa;
+            border: 1px solid #eee;
+        }
+
+        .char-box {
+            font-size: 1.8rem;
+            font-weight: bold;
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            border-radius: 50%;
+            color: white;
+            margin: 0 auto;
+        }
+
+        .korean {
+            font-size: 1rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* 오행 색상 클래스 */
+        .color-wood { background-color: #4CAF50; } /* 목 */
+        .color-fire { background-color: #F44336; } /* 화 */
+        .color-earth { background-color: #FFD600; color: #333 !important; } /* 토 (글자 검정) */
+        .color-metal { background-color: #9E9E9E; } /* 금 */
+        .color-water { background-color: #2196F3; } /* 수 */
+
+        .info-text {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #86868b;
+            text-align: center;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>사주 만세력 (Demo)</h1>
+    
+    <div class="input-group">
+        <input type="datetime-local" id="birthDate" required>
+        <button onclick="calculateSaju()">조회하기</button>
+    </div>
+
+    <div id="resultArea" style="display:none;">
+        <div class="result-grid">
+            <div>
+                <div class="pillar-header">시주 (Time)</div>
+                <div class="pillar-card">
+                    <div id="hourSky" class="char-box">?</div>
+                    <div id="hourSkyKo" class="korean">?</div>
+                </div>
+                <div class="pillar-card" style="margin-top:5px;">
+                    <div id="hourGround" class="char-box">?</div>
+                    <div id="hourGroundKo" class="korean">?</div>
+                </div>
+            </div>
+            <div>
+                <div class="pillar-header">일주 (Day)</div>
+                <div class="pillar-card">
+                    <div id="daySky" class="char-box">?</div>
+                    <div id="daySkyKo" class="korean">?</div>
+                </div>
+                <div class="pillar-card" style="margin-top:5px;">
+                    <div id="dayGround" class="char-box">?</div>
+                    <div id="dayGroundKo" class="korean">?</div>
+                </div>
+            </div>
+            <div>
+                <div class="pillar-header">월주 (Month)</div>
+                <div class="pillar-card">
+                    <div id="monthSky" class="char-box">?</div>
+                    <div id="monthSkyKo" class="korean">?</div>
+                </div>
+                <div class="pillar-card" style="margin-top:5px;">
+                    <div id="monthGround" class="char-box">?</div>
+                    <div id="monthGroundKo" class="korean">?</div>
+                </div>
+            </div>
+            <div>
+                <div class="pillar-header">년주 (Year)</div>
+                <div class="pillar-card">
+                    <div id="yearSky" class="char-box">?</div>
+                    <div id="yearSkyKo" class="korean">?</div>
+                </div>
+                <div class="pillar-card" style="margin-top:5px;">
+                    <div id="yearGround" class="char-box">?</div>
+                    <div id="yearGroundKo" class="korean">?</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="info-text">
+        * 본 만세력은 알고리즘 테스트용입니다.<br>
+        * 절기 시간은 매년 미세하게 다르나, 여기서는 표준일(예: 입춘 2월 4일)을 기준으로 계산하므로 절기일에 태어난 경우 오차가 있을 수 있습니다.
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    // 1. 데이터 정의 (Data Definitions)
+    // ==========================================
+    
+    const WUXING = {
+        MOK: { ko: '목', color: 'color-wood' },
+        HWA: { ko: '화', color: 'color-fire' },
+        TO:  { ko: '토', color: 'color-earth' },
+        GEUM:{ ko: '금', color: 'color-metal' },
+        SU:  { ko: '수', color: 'color-water' }
+    };
+
+    const SKY_DATA = [
+        { idx: 0, ko: '갑', ch: '甲', wuxing: WUXING.MOK },
+        { idx: 1, ko: '을', ch: '乙', wuxing: WUXING.MOK },
+        { idx: 2, ko: '병', ch: '丙', wuxing: WUXING.HWA },
+        { idx: 3, ko: '정', ch: '丁', wuxing: WUXING.HWA },
+        { idx: 4, ko: '무', ch: '戊', wuxing: WUXING.TO },
+        { idx: 5, ko: '기', ch: '己', wuxing: WUXING.TO },
+        { idx: 6, ko: '경', ch: '庚', wuxing: WUXING.GEUM },
+        { idx: 7, ko: '신', ch: '辛', wuxing: WUXING.GEUM },
+        { idx: 8, ko: '임', ch: '壬', wuxing: WUXING.SU },
+        { idx: 9, ko: '계', ch: '癸', wuxing: WUXING.SU }
+    ];
+
+    const GROUND_DATA = [
+        { idx: 0, ko: '자', ch: '子', wuxing: WUXING.SU },
+        { idx: 1, ko: '축', ch: '丑', wuxing: WUXING.TO },
+        { idx: 2, ko: '인', ch: '寅', wuxing: WUXING.MOK },
+        { idx: 3, ko: '묘', ch: '卯', wuxing: WUXING.MOK },
+        { idx: 4, ko: '진', ch: '辰', wuxing: WUXING.TO },
+        { idx: 5, ko: '사', ch: '巳', wuxing: WUXING.HWA },
+        { idx: 6, ko: '오', ch: '午', wuxing: WUXING.HWA },
+        { idx: 7, ko: '미', ch: '未', wuxing: WUXING.TO },
+        { idx: 8, ko: '신', ch: '申', wuxing: WUXING.GEUM },
+        { idx: 9, ko: '유', ch: '酉', wuxing: WUXING.GEUM },
+        { idx: 10, ko: '술', ch: '戌', wuxing: WUXING.TO },
+        { idx: 11, ko: '해', ch: '亥', wuxing: WUXING.SU }
+    ];
+
+    // 절기 기준일 (양력 월: 일) - 근사치
+    const SOLAR_TERMS = {
+        2: 4,  3: 6,  4: 5,  5: 6,
+        6: 6,  7: 7,  8: 8,  9: 8,
+        10: 8, 11: 7, 12: 7, 1: 6
+    };
+
+    // ==========================================
+    // 2. 유틸리티 함수
+    // ==========================================
+    
+    // JS의 % 연산자는 음수 처리가 파이썬과 다름. 파이썬 식 모듈러 함수 구현
+    function mod(n, m) {
+        return ((n % m) + m) % m;
+    }
+
+    // ==========================================
+    // 3. 계산 로직 (Logic)
+    // ==========================================
+
+    function calculateSaju() {
+        const inputStr = document.getElementById('birthDate').value;
+        if (!inputStr) {
+            alert("생년월일시를 입력해주세요.");
+            return;
+        }
+
+        const dateObj = new Date(inputStr);
+        
+        // JS Date는 Month가 0부터 시작함 (0=1월, 1=2월...)
+        const year = dateObj.getFullYear();
+        const month = dateObj.getMonth() + 1; // 1~12
+        const day = dateObj.getDate();
+        const hour = dateObj.getHours();
+        const minute = dateObj.getMinutes();
+
+        // -----------------------
+        // A. 년주 (Year Pillar)
+        // -----------------------
+        // 입춘(2월 4일경) 기준으로 년도가 바뀜
+        const ipchunDay = SOLAR_TERMS[2];
+        let isBeforeIpchun = (month < 2) || (month === 2 && day < ipchunDay);
+        
+        // 입춘 전이면 작년으로 취급
+        let sajuYear = isBeforeIpchun ? year - 1 : year;
+
+        // 1984년(갑자년) 기준 공식: (년도 - 4) % 10 / 12
+        // 혹은 그냥 mod 연산 사용
+        let yearSkyIdx = mod(sajuYear - 4, 10);
+        let yearGroundIdx = mod(sajuYear - 4, 12);
+
+
+        // -----------------------
+        // B. 월주 (Month Pillar)
+        // -----------------------
+        // 해당 월의 절기일 확인
+        const termDay = SOLAR_TERMS[month];
+        let sajuMonthNum = month;
+        
+        if (day < termDay) {
+            sajuMonthNum = month - 1;
+            if (sajuMonthNum < 1) sajuMonthNum = 12;
+        }
+
+        // 월지 (Ground) 계산: 2월(寅)부터 시작
+        // 인월(2월) -> index 2.
+        // 공식: (sajuMonthNum % 12) 가 아니라 고정된 매핑 필요
+        // 1월(축) -> 1, 2월(인) -> 2, ... 11월(자) -> 0, 12월(축) -> 1 ...
+        // Python 코드 로직: month_ground_idx = saju_month_num % 12
+        let monthGroundIdx = sajuMonthNum % 12;
+
+        // 월천간 (Sky) 계산: 연두법
+        // (년천간idx % 5) * 2 + 2 = 인월의 천간
+        let startMonthSkyIdx = (yearSkyIdx % 5) * 2 + 2;
+        // 인월(2)로부터 얼마나 지났나?
+        // 자(0), 축(1), 인(2)...
+        let monthsPassed = mod(monthGroundIdx - 2, 12);
+        let monthSkyIdx = mod(startMonthSkyIdx + monthsPassed, 10);
+
+
+        // -----------------------
+        // C. 일주 (Day Pillar)
+        // -----------------------
+        // 기준일: 2024년 1월 1일 (갑자일, Index 0)
+        // 날짜 차이 계산 (밀리초 단위 -> 일 단위)
+        const refDate = new Date(2024, 0, 1); // 2024-01-01
+        
+        // 입력된 날짜의 자정 기준 (시간 영향 제거)
+        const targetDate = new Date(year, month - 1, day);
+        
+        const diffTime = targetDate.getTime() - refDate.getTime();
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        
+        // 갑자(0) + 차이
+        let dayGanjiIdx = mod(diffDays, 60);
+        let daySkyIdx = dayGanjiIdx % 10;
+        let dayGroundIdx = dayGanjiIdx % 12;
+
+
+        // -----------------------
+        // D. 시주 (Hour Pillar)
+        // -----------------------
+        // 야자시(23:30 ~) 고려. 
+        // 30분 보정 (동경 127.5도) -> 23:30을 넘으면 자시로 봄
+        let timeVal = hour + (minute / 60.0);
+        let hourGroundIdx = 0;
+        
+        if (timeVal >= 23.5) {
+            hourGroundIdx = 0; // 자시
+        } else {
+            // (시간 + 0.5) / 2 의 몫
+            // 예: 00:30 -> 1/2 = 0 (자시)
+            // 01:30 -> 2/2 = 1 (축시)
+            hourGroundIdx = Math.floor((timeVal + 0.5) / 2) % 12;
+        }
+
+        // 시천간 (Sky) 계산: 시두법
+        // (일천간idx % 5) * 2
+        let startHourSkyIdx = (daySkyIdx % 5) * 2;
+        let hourSkyIdx = mod(startHourSkyIdx + hourGroundIdx, 10);
+
+        
+        // -----------------------
+        // E. 결과 렌더링
+        // -----------------------
+        renderPillar('year', yearSkyIdx, yearGroundIdx);
+        renderPillar('month', monthSkyIdx, monthGroundIdx);
+        renderPillar('day', daySkyIdx, dayGroundIdx);
+        renderPillar('hour', hourSkyIdx, hourGroundIdx);
+
+        document.getElementById('resultArea').style.display = 'block';
+    }
+
+    function renderPillar(prefix, skyIdx, groundIdx) {
+        const sky = SKY_DATA[skyIdx];
+        const ground = GROUND_DATA[groundIdx];
+
+        // 천간
+        const elSky = document.getElementById(prefix + 'Sky');
+        const elSkyKo = document.getElementById(prefix + 'SkyKo');
+        elSky.textContent = sky.ch;
+        elSkyKo.textContent = sky.ko;
+        
+        // 색상 초기화 및 적용
+        elSky.className = 'char-box ' + sky.wuxing.color;
+
+        // 지지
+        const elGround = document.getElementById(prefix + 'Ground');
+        const elGroundKo = document.getElementById(prefix + 'GroundKo');
+        elGround.textContent = ground.ch;
+        elGroundKo.textContent = ground.ko;
+
+        // 색상 초기화 및 적용
+        elGround.className = 'char-box ' + ground.wuxing.color;
+    }
+
+    // 초기값 설정 (현재 시간)
+    window.onload = function() {
+        const now = new Date();
+        const offset = now.getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
+        document.getElementById('birthDate').value = localISOTime;
+    };
+</script>
+
+</body>
+</html>
