@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>만세력 Pro (Saju Calculator)</title>
+    <title>만세력 (상세 테이블)</title>
     <style>
         :root {
-            --bg-color: #f0f2f5;
+            --bg-color: #f5f5f7;
             --card-bg: #ffffff;
-            --text-main: #1d1d1f;
-            --text-sub: #86868b;
+            --border-color: #e0e0e0;
+            --header-bg: #f0f2f5;
+            --primary-color: #0071e3;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-main);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
         }
 
@@ -29,7 +30,7 @@
             border-radius: 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             width: 100%;
-            max-width: 800px; /* 넓혔음 */
+            max-width: 800px;
         }
 
         h1 {
@@ -42,131 +43,113 @@
         .input-group {
             display: flex;
             gap: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             justify-content: center;
             flex-wrap: wrap;
         }
 
         input[type="datetime-local"] {
-            padding: 12px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
             font-size: 1rem;
-            min-width: 250px;
         }
 
         button {
-            padding: 12px 24px;
-            background-color: #0071e3;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 1rem;
             cursor: pointer;
-            font-weight: 600;
         }
+        button:hover { background-color: #0077ed; }
 
-        button:hover {
-            background-color: #0077ed;
-        }
-
-        /* 결과 그리드 */
-        .result-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr); /* 시 일 월 년 */
-            gap: 12px;
+        /* 테이블 스타일 */
+        .saju-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
             text-align: center;
-        }
-        
-        @media (max-width: 600px) {
-            .result-grid {
-                grid-template-columns: repeat(2, 1fr); /* 모바일 2열 */
-                gap: 15px;
-            }
+            table-layout: fixed;
+            font-size: 0.95rem;
         }
 
-        .pillar-column {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .saju-table th, .saju-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 4px; /* 패딩 약간 줄임 */
+            vertical-align: middle;
         }
 
-        .pillar-header {
-            font-size: 0.9rem;
-            color: var(--text-sub);
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .card {
-            background: #fafafa;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            padding: 10px 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        /* 십성 라벨 */
-        .ten-god {
-            font-size: 0.75rem;
+        .saju-table th {
+            background-color: var(--header-bg);
+            font-weight: 600;
             color: #555;
-            background: #e0e0e0;
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin-bottom: 4px;
-            min-height: 18px;
+            height: 40px;
         }
 
-        /* 글자 박스 */
-        .char-box {
-            font-size: 2rem;
+        /* 첫 번째 열 (헤더) 스타일 */
+        .row-header {
+            background-color: #fafafa;
             font-weight: bold;
-            width: 55px;
-            height: 55px;
-            line-height: 55px;
-            border-radius: 12px;
+            width: 90px; /* 글씨가 길어져서 너비 조금 늘림 */
+            color: #333;
+            font-size: 0.85rem;
+            word-break: keep-all; /* 단어 끊기 방지 */
+        }
+
+        /* 글자 박스 (천간/지지) */
+        .char-box {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.4rem;
+            font-weight: bold;
             color: white;
-            margin: 5px 0;
+            margin-bottom: 2px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .korean {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-        
-        .hanja-sub {
-            font-size: 0.8rem;
-            color: #888;
-            margin-bottom: 5px;
+        .char-ko {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #555;
+            display: block;
         }
 
-        /* 12운성 & 신살 */
-        .sub-info {
-            margin-top: 5px;
-            font-size: 0.8rem;
-            width: 100%;
-        }
-        
-        .unseong {
-            color: #0071e3;
+        /* 십성 텍스트 */
+        .ten-god-text {
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 4px;
+            color: #444;
+            background-color: #f5f5f5;
+            padding: 3px 6px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
-        .sinsal-badge {
-            display: inline-block;
-            font-size: 0.7rem;
-            padding: 2px 4px;
-            border-radius: 3px;
-            margin: 1px;
-            background-color: #fff0f0;
-            color: #d32f2f;
-            border: 1px solid #ffcdd2;
+        /* 본원 강조 */
+        .master-label {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
         }
+
+        /* 신살/귀인 배지 */
+        .badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin: 1px;
+            line-height: 1.3;
+        }
+        .badge-sinsal { background-color: #fff0f0; color: #d32f2f; border: 1px solid #ffcdd2; }
+        .badge-noble { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
 
         /* 오행 색상 */
         .bg-wood { background-color: #4CAF50; }
@@ -175,21 +158,19 @@
         .bg-metal { background-color: #90A4AE; }
         .bg-water { background-color: #2196F3; }
         
-        .info-box {
-            margin-top: 30px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #666;
-            line-height: 1.6;
+        /* 모바일 대응 */
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .char-box { width: 35px; height: 35px; font-size: 1.1rem; }
+            .saju-table { font-size: 0.8rem; }
+            .row-header { width: 70px; font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>만세력 Pro</h1>
+    <h1>만세력 (상세 분석)</h1>
     
     <div class="input-group">
         <input type="datetime-local" id="birthDate">
@@ -197,96 +178,82 @@
     </div>
 
     <div id="resultArea" style="display:none;">
-        <div class="result-grid">
-            <div class="pillar-column">
-                <div class="pillar-header">시주 (Time)</div>
-                <div class="card">
-                    <div class="ten-god" id="hourSkyTen"></div>
-                    <div id="hourSky" class="char-box">?</div>
-                    <div id="hourSkyKo" class="korean">?</div>
-                </div>
-                <div class="card">
-                    <div class="ten-god" id="hourGroundTen"></div>
-                    <div id="hourGround" class="char-box">?</div>
-                    <div id="hourGroundKo" class="korean">?</div>
-                    <div class="sub-info">
-                        <div class="unseong" id="hourUnseong"></div>
-                        <div id="hourSinsal"></div>
-                    </div>
-                </div>
-            </div>
+        <table class="saju-table">
+            <thead>
+                <tr>
+                    <th class="row-header">구분</th>
+                    <th>년주 (Year)</th>
+                    <th>월주 (Month)</th>
+                    <th>일주 (Day)</th>
+                    <th>시주 (Time)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-header">천간</td>
+                    <td id="yearSkyCell"></td>
+                    <td id="monthSkyCell"></td>
+                    <td id="daySkyCell"></td>
+                    <td id="hourSkyCell"></td>
+                </tr>
+                <tr>
+                    <td class="row-header">천간 십성</td>
+                    <td id="yearSkyTen"></td>
+                    <td id="monthSkyTen"></td>
+                    <td id="daySkyTen"></td> <td id="hourSkyTen"></td>
+                </tr>
+                
+                <tr>
+                    <td class="row-header">지지</td>
+                    <td id="yearGroundCell"></td>
+                    <td id="monthGroundCell"></td>
+                    <td id="dayGroundCell"></td>
+                    <td id="hourGroundCell"></td>
+                </tr>
+                <tr>
+                    <td class="row-header">지지 십성</td>
+                    <td id="yearGroundTen"></td>
+                    <td id="monthGroundTen"></td>
+                    <td id="dayGroundTen"></td>
+                    <td id="hourGroundTen"></td>
+                </tr>
 
-            <div class="pillar-column">
-                <div class="pillar-header">일주 (Day) - 본원</div>
-                <div class="card" style="border-color: #0071e3; border-width: 2px;">
-                    <div class="ten-god" style="background:#0071e3; color:white;">일간(나)</div>
-                    <div id="daySky" class="char-box">?</div>
-                    <div id="daySkyKo" class="korean">?</div>
-                </div>
-                <div class="card">
-                    <div class="ten-god" id="dayGroundTen"></div>
-                    <div id="dayGround" class="char-box">?</div>
-                    <div id="dayGroundKo" class="korean">?</div>
-                    <div class="sub-info">
-                        <div class="unseong" id="dayUnseong"></div>
-                        <div id="daySinsal"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pillar-column">
-                <div class="pillar-header">월주 (Month)</div>
-                <div class="card">
-                    <div class="ten-god" id="monthSkyTen"></div>
-                    <div id="monthSky" class="char-box">?</div>
-                    <div id="monthSkyKo" class="korean">?</div>
-                </div>
-                <div class="card">
-                    <div class="ten-god" id="monthGroundTen"></div>
-                    <div id="monthGround" class="char-box">?</div>
-                    <div id="monthGroundKo" class="korean">?</div>
-                    <div class="sub-info">
-                        <div class="unseong" id="monthUnseong"></div>
-                        <div id="monthSinsal"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pillar-column">
-                <div class="pillar-header">년주 (Year)</div>
-                <div class="card">
-                    <div class="ten-god" id="yearSkyTen"></div>
-                    <div id="yearSky" class="char-box">?</div>
-                    <div id="yearSkyKo" class="korean">?</div>
-                </div>
-                <div class="card">
-                    <div class="ten-god" id="yearGroundTen"></div>
-                    <div id="yearGround" class="char-box">?</div>
-                    <div id="yearGroundKo" class="korean">?</div>
-                    <div class="sub-info">
-                        <div class="unseong" id="yearUnseong"></div>
-                        <div id="yearSinsal"></div>
-                    </div>
-                </div>
-            </div>
+                <tr>
+                    <td class="row-header">십이운성</td>
+                    <td id="yearUnseong"></td>
+                    <td id="monthUnseong"></td>
+                    <td id="dayUnseong"></td>
+                    <td id="hourUnseong"></td>
+                </tr>
+                <tr>
+                    <td class="row-header">신살</td>
+                    <td id="yearSinsal"></td>
+                    <td id="monthSinsal"></td>
+                    <td id="daySinsal"></td>
+                    <td id="hourSinsal"></td>
+                </tr>
+                <tr>
+                    <td class="row-header">귀인</td>
+                    <td id="yearNoble"></td>
+                    <td id="monthNoble"></td>
+                    <td id="dayNoble"></td>
+                    <td id="hourNoble"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div style="margin-top: 20px; font-size: 0.8rem; color: #666; text-align: center; line-height: 1.5;">
+            * <b>천간 십성</b>: 일간(나)과 천간 글자 간의 관계<br>
+            * <b>지지 십성</b>: 일간(나)과 지지 정기(본기) 간의 관계<br>
+            * 2024년 1월 1일(갑자) 기준 역산 / 야자시 적용(23:30 이후 다음날 자시)
         </div>
-    </div>
-    
-    <div class="info-box">
-        <b>[도움말]</b><br>
-        * 십성: 일간(나)과 다른 글자와의 관계 (비견, 식신, 정재, 편관 등)<br>
-        * 12운성: 일간의 기운이 해당 지지에서 얼마나 강한지 나타내는 지표 (제왕>건록>관대... >절/태)<br>
-        * 신살: 천을귀인(귀인), 백호살(강한 기운), 역마/도화/화개 등 주요 신살만 표시됩니다.<br>
-        * 야자시/조자시 구분 없이 23:30 이후는 다음날 자시로 계산합니다.
     </div>
 </div>
 
 <script>
     // ==========================================
-    // 1. 상수 및 데이터 (Constants & Data)
+    // 1. 데이터 정의
     // ==========================================
-    
-    // 오행 정의 (index: 0=목, 1=화, 2=토, 3=금, 4=수)
     const WUXING = [
         { name: '목', color: 'bg-wood' },
         { name: '화', color: 'bg-fire' },
@@ -295,8 +262,6 @@
         { name: '수', color: 'bg-water' }
     ];
 
-    // 십성 이름 매핑 (행: 일간오행 vs 타오행 관계, 열: 음양 같음/다름)
-    // 관계: 0=비겁, 1=식상, 2=재성, 3=관성, 4=인성
     const TEN_GODS = {
         0: ['비견', '겁재'],
         1: ['식신', '상관'],
@@ -305,16 +270,8 @@
         4: ['편인', '정인']
     };
 
-    // 12운성 순서 (절, 태, 양, 장생, 목욕, 관대, 건록, 제왕, 쇠, 병, 사, 묘)
-    // 편의상 인덱스 접근을 위해 배열로 정의
-    const UNSEONG_NAMES = [
-        "장생", "목욕", "관대", "건록", "제왕", "쇠", 
-        "병",   "사",   "묘",   "절",   "태",   "양"
-    ];
+    const UNSEONG_NAMES = ["장생", "목욕", "관대", "건록", "제왕", "쇠", "병", "사", "묘", "절", "태", "양"];
 
-    // 천간 데이터 (idx: 0~9, Gap~Gye)
-    // yinYang: 0=Yang, 1=Yin
-    // wuxingIdx: 0=Wood ... 4=Water
     const SKY_DATA = [
         { idx:0, ch:'甲', ko:'갑', wuxingIdx:0, yinYang:0 },
         { idx:1, ch:'乙', ko:'을', wuxingIdx:0, yinYang:1 },
@@ -328,56 +285,32 @@
         { idx:9, ch:'癸', ko:'계', wuxingIdx:4, yinYang:1 }
     ];
 
-    // 지지 데이터 (idx: 0~11, Ja~Hae)
-    // yinYang: 0=Yang, 1=Yin (체와 용이 다를 수 있으나, 명리 일반론인 체 기준)
-    // 자(수,양), 축(토,음), 인(목,양)... 
-    // 주의: 자(子)는 체는 양이나 용은 음, 여기선 계산 편의상 고유 속성 사용
-    // 자(0,수,양), 축(1,토,음), 인(2,목,양), 묘(3,목,음), 진(4,토,양), 사(5,화,음),
-    // 오(6,화,양), 미(7,토,음), 신(8,금,양), 유(9,금,음), 술(10,토,양), 해(11,수,음)
+    // 지지 데이터 (isYang: 십성 계산용 음양, 실제 체와 다를 수 있음. 자수는 음수 취급 등)
     const GROUND_DATA = [
-        { idx:0,  ch:'子', ko:'자', wuxingIdx:4, yinYang:0 }, // 수, 양 (실제 사주는 음으로 쓰기도 함, 로직상 보정 필요시 수정)
-        { idx:1,  ch:'丑', ko:'축', wuxingIdx:2, yinYang:1 },
-        { idx:2,  ch:'寅', ko:'인', wuxingIdx:0, yinYang:0 },
-        { idx:3,  ch:'卯', ko:'묘', wuxingIdx:0, yinYang:1 },
-        { idx:4,  ch:'辰', ko:'진', wuxingIdx:2, yinYang:0 },
-        { idx:5,  ch:'巳', ko:'사', wuxingIdx:1, yinYang:1 }, // 사화는 체는 음, 용은 양 (여기선 음양 순서대로 0,1 할당 시 5는 음) -> 수정: 사는 양화(체는 음)
-        // 여기선 단순화: 자0(양), 축1(음), 인2(양), 묘3(음), 진4(양), 사5(음->양?), 오6(양->음?)
-        // *중요*: 십성 계산을 위해 '자'는 양, '해'는 음 등 표준 양/음 할당을 따름.
-        // 자(양), 축(음), 인(양), 묘(음), 진(양), 사(양-원래 체가 음이나 6양), 오(음-원래 체가 양이나 6음)
-        // 복잡하므로 십성 계산용 yinYang 값을 강제 지정함.
-    ];
-
-    // 지지 상세 데이터 (십성 계산용 YinYang 재정의)
-    // 자(수, 양-체/음-용) -> 십성 계산에선 '수'의 '양' 혹은 '음'으로 보느냐에 따라 비견/겁재 달라짐.
-    // 보통 자수는 '음수'로 봅니다 (체는 양이나 쓰임이 음). 해수는 '양수'.
-    // 사화는 '양화', 오화는 '음화'.
-    const GROUND_DETAIL = [
-        { idx:0,  ch:'子', ko:'자', wuxingIdx:4, isYang: false }, // 자수: 음
-        { idx:1,  ch:'丑', ko:'축', wuxingIdx:2, isYang: false }, // 축토: 음
-        { idx:2,  ch:'寅', ko:'인', wuxingIdx:0, isYang: true },  // 인목: 양
-        { idx:3,  ch:'卯', ko:'묘', wuxingIdx:0, isYang: false }, // 묘목: 음
-        { idx:4,  ch:'辰', ko:'진', wuxingIdx:2, isYang: true },  // 진토: 양
-        { idx:5,  ch:'巳', ko:'사', wuxingIdx:1, isYang: true },  // 사화: 양
-        { idx:6,  ch:'午', ko:'오', wuxingIdx:1, isYang: false }, // 오화: 음
-        { idx:7,  ch:'未', ko:'미', wuxingIdx:2, isYang: false }, // 미토: 음
-        { idx:8,  ch:'申', ko:'신', wuxingIdx:3, isYang: true },  // 신금: 양
-        { idx:9,  ch:'酉', ko:'유', wuxingIdx:3, isYang: false }, // 유금: 음
-        { idx:10, ch:'戌', ko:'술', wuxingIdx:2, isYang: true },  // 술토: 양
-        { idx:11, ch:'亥', ko:'해', wuxingIdx:4, isYang: true },  // 해수: 양
+        { idx:0,  ch:'子', ko:'자', wuxingIdx:4, isYang: false }, // 자(음수)
+        { idx:1,  ch:'丑', ko:'축', wuxingIdx:2, isYang: false }, // 축(음토)
+        { idx:2,  ch:'寅', ko:'인', wuxingIdx:0, isYang: true },  // 인(양목)
+        { idx:3,  ch:'卯', ko:'묘', wuxingIdx:0, isYang: false }, // 묘(음목)
+        { idx:4,  ch:'辰', ko:'진', wuxingIdx:2, isYang: true },  // 진(양토)
+        { idx:5,  ch:'巳', ko:'사', wuxingIdx:1, isYang: true },  // 사(양화)
+        { idx:6,  ch:'午', ko:'오', wuxingIdx:1, isYang: false }, // 오(음화)
+        { idx:7,  ch:'未', ko:'미', wuxingIdx:2, isYang: false }, // 미(음토)
+        { idx:8,  ch:'申', ko:'신', wuxingIdx:3, isYang: true },  // 신(양금)
+        { idx:9,  ch:'酉', ko:'유', wuxingIdx:3, isYang: false }, // 유(음금)
+        { idx:10, ch:'戌', ko:'술', wuxingIdx:2, isYang: true },  // 술(양토)
+        { idx:11, ch:'亥', ko:'해', wuxingIdx:4, isYang: true },  // 해(양수)
     ];
     
-    // 절기 (양력 월 기준)
     const SOLAR_TERMS = { 2:4, 3:6, 4:5, 5:6, 6:6, 7:7, 8:8, 9:8, 10:8, 11:7, 12:7, 1:6 };
 
     // ==========================================
-    // 2. 계산 로직 (Logic)
+    // 2. 계산 로직
     // ==========================================
-
     function mod(n, m) { return ((n % m) + m) % m; }
 
     function calculateSaju() {
         const inputStr = document.getElementById('birthDate').value;
-        if (!inputStr) return alert("생년월일시를 입력하세요.");
+        if (!inputStr) return alert("날짜를 선택하세요.");
 
         const dateObj = new Date(inputStr);
         const year = dateObj.getFullYear();
@@ -386,7 +319,7 @@
         const hour = dateObj.getHours();
         const minute = dateObj.getMinutes();
 
-        // [A] 년주
+        // 1. 년주
         const ipchunDay = SOLAR_TERMS[2];
         let isBeforeIpchun = (month < 2) || (month === 2 && day < ipchunDay);
         let sajuYear = isBeforeIpchun ? year - 1 : year;
@@ -394,43 +327,36 @@
         let yearSkyIdx = mod(sajuYear - 4, 10);
         let yearGroundIdx = mod(sajuYear - 4, 12);
 
-        // [B] 월주
+        // 2. 월주
         const termDay = SOLAR_TERMS[month];
         let sajuMonthNum = (day < termDay) ? month - 1 : month;
         if (sajuMonthNum < 1) sajuMonthNum = 12;
         
-        let monthGroundIdx = mod(sajuMonthNum == 1 ? 1 : sajuMonthNum == 2 ? 2 : sajuMonthNum % 12, 12);
-        // *보정*: 위 monthGroundIdx는 자(11월)축(12월)인(1월) 방식이 아니라,
-        // 인월=2월(idx2), 묘월=3월(idx3) 방식으로 매핑해야 함.
-        // 절기상: 2월(입춘)~ = 인월(2). 1월(소한)~ = 축월(1). 12월(대설)~ = 자월(0).
-        // 간단식: sajuMonthNum이 1->축(1), 2->인(2), ... 11->술(10)?, 12->자(0)?
-        // 2(인)..12(자)..1(축).
-        // 2월->2, 3월->3 ... 10월->10, 11월->11(해), 12월->0(자), 1월->1(축)
-        if (sajuMonthNum === 12) monthGroundIdx = 0; // 자월
-        else if (sajuMonthNum === 1) monthGroundIdx = 1; // 축월
-        else monthGroundIdx = sajuMonthNum; // 2월(인)~11월(해) -> index 2~11
-        
-        let startMonthSkyIdx = (yearSkyIdx % 5) * 2 + 2; // 갑기년 -> 병인두
-        let monthsPassed = mod(monthGroundIdx - 2, 12); // 인월(2) 기준 차이
+        let monthGroundIdx;
+        if (sajuMonthNum === 12) monthGroundIdx = 0; // 자
+        else if (sajuMonthNum === 1) monthGroundIdx = 1; // 축
+        else monthGroundIdx = sajuMonthNum; 
+
+        let startMonthSkyIdx = (yearSkyIdx % 5) * 2 + 2;
+        let monthsPassed = mod(monthGroundIdx - 2, 12);
         let monthSkyIdx = mod(startMonthSkyIdx + monthsPassed, 10);
 
-        // [C] 일주
-        const refDate = new Date(2024, 0, 1); // 갑자
+        // 3. 일주
+        const refDate = new Date(2024, 0, 1);
         const targetDate = new Date(year, month - 1, day);
         const diffDays = Math.floor((targetDate - refDate) / (86400000));
         let dayGanjiIdx = mod(diffDays, 60);
-        
         let daySkyIdx = dayGanjiIdx % 10;
         let dayGroundIdx = dayGanjiIdx % 12;
 
-        // [D] 시주
+        // 4. 시주
         let timeVal = hour + (minute / 60.0);
         let hourGroundIdx = (timeVal >= 23.5) ? 0 : Math.floor((timeVal + 0.5) / 2) % 12;
-        
-        let startHourSkyIdx = (daySkyIdx % 5) * 2; // 갑기일 -> 갑자시
+        let startHourSkyIdx = (daySkyIdx % 5) * 2;
         let hourSkyIdx = mod(startHourSkyIdx + hourGroundIdx, 10);
 
-        // [E] 렌더링
+        // 데이터 패키징
+        const dayMaster = SKY_DATA[daySkyIdx];
         const pillars = {
             year: { s: yearSkyIdx, g: yearGroundIdx },
             month: { s: monthSkyIdx, g: monthGroundIdx },
@@ -438,168 +364,120 @@
             hour: { s: hourSkyIdx, g: hourGroundIdx }
         };
 
-        const dayMaster = SKY_DATA[daySkyIdx]; // 일간 정보
-
-        renderPillar('year', pillars.year, dayMaster);
-        renderPillar('month', pillars.month, dayMaster);
-        renderPillar('day', pillars.day, dayMaster);
-        renderPillar('hour', pillars.hour, dayMaster);
+        // 렌더링 호출
+        renderColumn('year', pillars.year, dayMaster);
+        renderColumn('month', pillars.month, dayMaster);
+        renderColumn('day', pillars.day, dayMaster);
+        renderColumn('hour', pillars.hour, dayMaster);
 
         document.getElementById('resultArea').style.display = 'block';
     }
 
     // ------------------------------------
-    // 3. 관계 계산 함수 (Core Logic)
+    // 상세 로직 함수들
     // ------------------------------------
-
-    // 십성 계산
     function getTenGod(targetWuxing, targetIsYang, dayMaster) {
         const dayWuxing = dayMaster.wuxingIdx;
-        const dayIsYang = (dayMaster.yinYang === 0); // 0:Yang, 1:Yin -> true/false
-
-        // 관계: (타겟 - 일간 + 5) % 5
-        // 0:비겁, 1:식상, 2:재성, 3:관성, 4:인성
+        const dayIsYang = (dayMaster.yinYang === 0);
         const relation = mod(targetWuxing - dayWuxing, 5);
         const isSameYinYang = (targetIsYang === dayIsYang);
-        
-        // TEN_GODS = {0:['비견','겁재']...} -> [0]은 음양같음, [1]은 다름
         return TEN_GODS[relation][isSameYinYang ? 0 : 1];
     }
 
-    // 12운성 계산
     function get12Unseong(groundIdx, dayMaster) {
-        // 양간(갑병무경임)은 순행, 음간(을정기신계)은 역행
-        // 12운성: 장생 목욕 관대 건록 제왕 쇠 병 사 묘 절 태 양
-        // 기준점(장생지): 갑-해(11), 병/무-인(2), 경-사(5), 임-신(8)
-        // 음간 기준(장생지): 을-오(6), 정/기-유(9), 신-자(0), 계-묘(3)
-        
         const skyIdx = dayMaster.idx;
         const isYang = (skyIdx % 2 === 0);
-        
-        // 장생지 인덱스 (Ground Index)
-        const startPoints = {
-            0: 11, // 갑 -> 해
-            1: 6,  // 을 -> 오
-            2: 2,  // 병 -> 인
-            3: 9,  // 정 -> 유
-            4: 2,  // 무 -> 인 (화토동법)
-            5: 9,  // 기 -> 유
-            6: 5,  // 경 -> 사
-            7: 0,  // 신 -> 자
-            8: 8,  // 임 -> 신
-            9: 3   // 계 -> 묘
-        };
-
+        const startPoints = { 0:11, 1:6, 2:2, 3:9, 4:2, 5:9, 6:5, 7:0, 8:8, 9:3 };
         const startIdx = startPoints[skyIdx];
-        let offset;
-
-        if (isYang) {
-            // 순행: (지지 - 장생지)
-            offset = mod(groundIdx - startIdx, 12);
-        } else {
-            // 역행: (장생지 - 지지)
-            offset = mod(startIdx - groundIdx, 12);
-        }
-
+        let offset = isYang ? mod(groundIdx - startIdx, 12) : mod(startIdx - groundIdx, 12);
         return UNSEONG_NAMES[offset];
     }
 
-    // 신살 계산 (약식)
-    function getSinsal(pillarType, skyIdx, groundIdx, dayMaster) {
+    function getSinsalAndNoble(skyIdx, groundIdx, dayMaster) {
+        let nobles = [];
         let sinsals = [];
-        const g = GROUND_DETAIL[groundIdx];
         const daySky = dayMaster.idx;
 
-        // 1. 천을귀인 (Day Sky 기준)
-        // 갑무경 -> 축미, 을기 -> 자신, 병정 -> 해유, 신 -> 인오, 임계 -> 사묘
+        // 1. 천을귀인
         const nobleMap = {
-            0: [1, 7], 4: [1, 7], 6: [1, 7], // 갑무경 -> 축(1), 미(7)
-            1: [0, 8], 5: [0, 8],            // 을기 -> 자(0), 신(8)
-            2: [11, 9], 3: [11, 9],          // 병정 -> 해(11), 유(9)
-            7: [2, 6],                       // 신 -> 인(2), 오(6)
-            8: [5, 3], 9: [5, 3]             // 임계 -> 사(5), 묘(3)
+            0:[1,7], 4:[1,7], 6:[1,7],
+            1:[0,8], 5:[0,8],
+            2:[11,9], 3:[11,9],
+            7:[2,6], 8:[5,3], 9:[5,3]
         };
-        if (nobleMap[daySky].includes(groundIdx)) sinsals.push("천을귀인");
+        if (nobleMap[daySky] && nobleMap[daySky].includes(groundIdx)) nobles.push("천을귀인");
 
-        // 2. 백호대살 (Pillar 자체 조합)
-        // 갑진, 을미, 병술, 정축, 무진, 임술, 계축
+        // 2. 신살 (백호, 괴강, 도화 등)
         if ( (skyIdx===0 && groundIdx===4) || (skyIdx===1 && groundIdx===7) ||
              (skyIdx===2 && groundIdx===10)|| (skyIdx===3 && groundIdx===1) ||
              (skyIdx===4 && groundIdx===4) || (skyIdx===8 && groundIdx===10)||
-             (skyIdx===9 && groundIdx===1) ) {
-            sinsals.push("백호");
-        }
+             (skyIdx===9 && groundIdx===1) ) sinsals.push("백호살");
 
-        // 3. 괴강살 (무술, 경진, 경술, 임진)
         if ( (skyIdx===4 && groundIdx===10) || (skyIdx===6 && groundIdx===4) ||
-             (skyIdx===6 && groundIdx===10) || (skyIdx===8 && groundIdx===4) ) {
-             sinsals.push("괴강");
-        }
+             (skyIdx===6 && groundIdx===10) || (skyIdx===8 && groundIdx===4) ) sinsals.push("괴강살");
 
-        // 4. 지지 특성 (도화, 역마, 화개) - 약식 (글자 자체 속성)
-        // 도화: 자오묘유, 역마: 인신사해, 화개: 진술축미
-        if ([0, 6, 3, 9].includes(groundIdx)) sinsals.push("도화"); // 가도화 포함
+        if ([0, 6, 3, 9].includes(groundIdx)) sinsals.push("도화"); 
         if ([2, 8, 5, 11].includes(groundIdx)) sinsals.push("역마");
         if ([4, 10, 1, 7].includes(groundIdx)) sinsals.push("화개");
 
-        return sinsals;
+        return { nobles, sinsals };
     }
 
-    // ------------------------------------
-    // 4. 렌더링 함수
-    // ------------------------------------
-    function renderPillar(prefix, data, dayMaster) {
-        const skyIdx = data.s;
-        const groundIdx = data.g;
 
-        const skyInfo = SKY_DATA[skyIdx];
-        const groundInfo = GROUND_DETAIL[groundIdx];
+    // ------------------------------------
+    // 렌더링
+    // ------------------------------------
+    function renderColumn(prefix, data, dayMaster) {
+        const skyInfo = SKY_DATA[data.s];
+        const groundInfo = GROUND_DATA[data.g];
 
-        // 1. 천간 표시
-        const elSky = document.getElementById(prefix + 'Sky');
-        const elSkyKo = document.getElementById(prefix + 'SkyKo');
-        const elSkyTen = document.getElementById(prefix + 'SkyTen');
-        
-        elSky.textContent = skyInfo.ch;
-        elSkyKo.textContent = skyInfo.ko;
-        elSky.className = 'char-box ' + WUXING[skyInfo.wuxingIdx].color;
-        
-        // 십성 (천간)
+        // 1. 천간
+        const skyCell = document.getElementById(prefix + 'SkyCell');
+        skyCell.innerHTML = `
+            <div class="char-box ${WUXING[skyInfo.wuxingIdx].color}">${skyInfo.ch}</div>
+            <span class="char-ko">${skyInfo.ko}</span>
+        `;
+
+        // 2. 천간 십성 (New Row)
+        const skyTenCell = document.getElementById(prefix + 'SkyTen');
         if (prefix === 'day') {
-             // 일간은 십성 표시 안함 (나)
+            skyTenCell.innerHTML = '<span class="master-label">본원</span>';
         } else {
-            // 천간은 음양(0/1) 그대로 사용
-            elSkyTen.textContent = getTenGod(skyInfo.wuxingIdx, skyInfo.yinYang === 0, dayMaster);
+            const ten = getTenGod(skyInfo.wuxingIdx, skyInfo.yinYang === 0, dayMaster);
+            skyTenCell.innerHTML = `<span class="ten-god-text">${ten}</span>`;
         }
 
-        // 2. 지지 표시
-        const elGround = document.getElementById(prefix + 'Ground');
-        const elGroundKo = document.getElementById(prefix + 'GroundKo');
-        const elGroundTen = document.getElementById(prefix + 'GroundTen');
+        // 3. 지지
+        const groundCell = document.getElementById(prefix + 'GroundCell');
+        groundCell.innerHTML = `
+            <div class="char-box ${WUXING[groundInfo.wuxingIdx].color}">${groundInfo.ch}</div>
+            <span class="char-ko">${groundInfo.ko}</span>
+        `;
+
+        // 4. 지지 십성 (New Row)
+        const groundTenCell = document.getElementById(prefix + 'GroundTen');
+        const groundTen = getTenGod(groundInfo.wuxingIdx, groundInfo.isYang, dayMaster);
+        groundTenCell.innerHTML = `<span class="ten-god-text">${groundTen}</span>`;
+
+
+        // 5. 십이운성
+        const unseongCell = document.getElementById(prefix + 'Unseong');
+        unseongCell.innerText = get12Unseong(data.g, dayMaster);
+
+        // 6. 신살 & 귀인
+        const result = getSinsalAndNoble(data.s, data.g, dayMaster);
         
-        elGround.textContent = groundInfo.ch;
-        elGroundKo.textContent = groundInfo.ko;
-        elGround.className = 'char-box ' + WUXING[groundInfo.wuxingIdx].color;
+        const sinsalCell = document.getElementById(prefix + 'Sinsal');
+        sinsalCell.innerHTML = result.sinsals.map(s => `<span class="badge badge-sinsal">${s}</span>`).join(' ');
 
-        // 십성 (지지) - 지장간 무시하고 정기(Body) 기준
-        elGroundTen.textContent = getTenGod(groundInfo.wuxingIdx, groundInfo.isYang, dayMaster);
-
-        // 3. 12운성 & 신살
-        const elUnseong = document.getElementById(prefix + 'Unseong');
-        const elSinsal = document.getElementById(prefix + 'Sinsal');
-
-        elUnseong.textContent = get12Unseong(groundIdx, dayMaster);
-        
-        const sinsalList = getSinsal(prefix, skyIdx, groundIdx, dayMaster);
-        elSinsal.innerHTML = sinsalList.map(s => `<span class="sinsal-badge">${s}</span>`).join('');
+        const nobleCell = document.getElementById(prefix + 'Noble');
+        nobleCell.innerHTML = result.nobles.map(n => `<span class="badge badge-noble">${n}</span>`).join(' ');
     }
 
-    // 초기 실행
     window.onload = function() {
         const now = new Date();
         const offset = now.getTimezoneOffset() * 60000;
-        const localISOTime = (new Date(now - offset)).toISOString().slice(0, 16);
-        document.getElementById('birthDate').value = localISOTime;
+        document.getElementById('birthDate').value = (new Date(now - offset)).toISOString().slice(0, 16);
     };
 </script>
 
